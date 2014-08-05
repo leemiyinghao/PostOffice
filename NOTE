@@ -1,0 +1,14 @@
+Finish:
+   File based database.
+   Send mail/package.
+   Set mailbox.
+Todo:
+   Command interface not complete.
+   It should alert when setting a not-chest block into mailbox.
+   It should need comfirm when someone reset mailbox.
+   There is no alert when mailbox is full.
+   Player login listener:
+      - remind how many item in their mailbox.
+      - alert them as mailbox is full.
+   Send "u got mail" info to player when he/she is online.
+   Permission setting.

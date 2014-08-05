@@ -1,0 +1,7 @@
+name: PostOffice
+version: 0.1
+main: tw.longcat.lab.PostOffice.PostOffice
+commands:
+   po:
+      description: 'Teleport Player to there home with some cost.'
+      usage: '/payhome: Pay for teleporting to home.'
