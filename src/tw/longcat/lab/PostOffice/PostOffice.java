@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -36,14 +37,20 @@ public class PostOffice extends JavaPlugin{
 					if(playerInList){
 						MailBox box = mailSys.getMailBox(getServer().getPlayer(args[1]));
 						if(box!=null){
+							if(!box.canMail())
+								sender.sendMessage(FormatMessage.warning("There is no space in mailbox, place into queue."));
 							ItemStack items = ((Player)sender).getItemInHand();
 							box.mail(items);
 							((Player)sender).setItemInHand(new ItemStack(0));
+							sender.sendMessage(FormatMessage.info("Mail sent: " + args[1]));
+							return true;
 						}else{
 							sender.sendMessage(FormatMessage.error("Player don't have mailbox: " + args[1]));
+							return true;
 						}
 					}else{
 						sender.sendMessage(FormatMessage.error("Player not found: " + args[1]));
+						return true;
 					}
 				}
 			}else if(args.length>0){
@@ -53,11 +60,17 @@ public class PostOffice extends JavaPlugin{
 					if(!(sender instanceof Player))
 						sender.sendMessage(FormatMessage.error("Only Player can do this."));
 					Location loc = ((Player)sender).getTargetBlock(null, 15).getLocation();
-					mailSys.setMailBox((Player)sender, loc);
+					if(loc.getBlock().getType() == Material.CHEST){
+						mailSys.setMailBox((Player)sender, loc);
+						sender.sendMessage(FormatMessage.info("MailBox set."));
+					}else{
+						sender.sendMessage(FormatMessage.info("The block is not a Chest"));
+					}
 				}
 			}
 			sender.sendMessage(ChatColor.YELLOW + "/po send (receiver)" + ChatColor.WHITE+" : " + ChatColor.ITALIC + "Send item in hand to receiver.");
 			sender.sendMessage(ChatColor.YELLOW + "/po check" + ChatColor.WHITE+" : " + ChatColor.ITALIC + "Check mailbox");
+			sender.sendMessage(ChatColor.YELLOW + "/po setmailbox" + ChatColor.WHITE+" : " + ChatColor.ITALIC + "Setup a mailbox");
 			return true;
 		}
 		return false;

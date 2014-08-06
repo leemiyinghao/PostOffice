@@ -2,11 +2,12 @@ Finish:
    File based database.
    Send mail/package.
    Set mailbox.
+   It should alert when setting a not-chest block into mailbox.
+   There is no alert when mailbox is full.
 Todo:
    Command interface not complete.
-   It should alert when setting a not-chest block into mailbox.
    It should need comfirm when someone reset mailbox.
-   There is no alert when mailbox is full.
+   Mailbox queue.
    Player login listener:
       - remind how many item in their mailbox.
       - alert them as mailbox is full.
