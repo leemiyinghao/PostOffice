@@ -24,8 +24,14 @@ public class PostOffice extends JavaPlugin{
 			command.getLabel().equalsIgnoreCase("mail")){
 			if(args.length>1){
 				if(args[0].equalsIgnoreCase("send")){
-					if(!(sender instanceof Player))
+					if(!(sender instanceof Player)){
 						sender.sendMessage(FormatMessage.error("Only Player can do this."));
+						return true;
+					}
+					if(((Player)sender).getItemInHand().getAmount() == 0){
+						sender.sendMessage(FormatMessage.error("You have to put something on your hand."));
+						return true;
+					}
 					Set<OfflinePlayer> whiteListedPlayer = getServer().getWhitelistedPlayers();
 					boolean playerInList = false;
 					for(OfflinePlayer offPlayer : whiteListedPlayer){
@@ -35,7 +41,7 @@ public class PostOffice extends JavaPlugin{
 						}
 					}
 					if(playerInList){
-						MailBox box = mailSys.getMailBox(getServer().getPlayer(args[1]));
+						MailBox box = mailSys.getMailBox((Player) getServer().getOfflinePlayer(args[1]));
 						if(box != null){
 							if(!(box.canMail()))
 								sender.sendMessage(FormatMessage.warning("There is no space in mailbox, place into queue."));
@@ -43,6 +49,10 @@ public class PostOffice extends JavaPlugin{
 							box.mail(items);
 							((Player)sender).setItemInHand(new ItemStack(0));
 							sender.sendMessage(FormatMessage.info("Mail sent: " + args[1]));
+							//Info Receiver
+							if(getServer().getOfflinePlayer(args[1]).isOnline()){
+								getServer().getPlayer(args[1]).sendMessage(FormatMessage.info("You've got mail."));
+							}
 							return true;
 						}else{
 							sender.sendMessage(FormatMessage.error("Player don't have mailbox: " + args[1]));
@@ -59,8 +69,14 @@ public class PostOffice extends JavaPlugin{
 					sender.sendMessage(FormatMessage.info("Reload complete."));
 					return true;
 				}else if(args[0].equalsIgnoreCase("setmailbox")){
-					if(!(sender instanceof Player))
+					if(!(sender instanceof Player)){
 						sender.sendMessage(FormatMessage.error("Only Player can do this."));
+						return true;
+					}
+					if(mailSys.getMailBox((Player)sender) != null){
+						sender.sendMessage(FormatMessage.error("You already have mailbox, resetmailbox if you need a new one."));
+						return true;
+					}
 					Location loc = ((Player)sender).getTargetBlock(null, 15).getLocation();
 					if(loc.getBlock().getType() == Material.CHEST){
 						mailSys.setMailBox((Player)sender, loc);
@@ -77,7 +93,7 @@ public class PostOffice extends JavaPlugin{
 						while(box.canMail()){
 							ItemStack items = mailSys.pullQueue((Player)sender);
 							if(items == null){
-								sender.sendMessage(FormatMessage.info("You don't have mail in queue."));
+								sender.sendMessage(FormatMessage.info("There is no more mail in queue."));
 								return true;
 							}
 							box.mail(items);
@@ -85,8 +101,41 @@ public class PostOffice extends JavaPlugin{
 						sender.sendMessage(FormatMessage.warning("Mailbox is full, can not pull more mail from queue."));
 						return true;
 					}else{
-						sender.sendMessage(FormatMessage.error("You don't have mailbox: " + args[1]));
+						sender.sendMessage(FormatMessage.error("You don't have mailbox."));
 					}
+					return true;
+				}else if(args[0].equalsIgnoreCase("check")){
+					if(!(sender instanceof Player)){
+						sender.sendMessage(FormatMessage.error("Only Player can do this."));
+						return true;
+					}
+					if(mailSys.getMailBox((Player)sender) == null){
+						sender.sendMessage(FormatMessage.error("You don't have mailbox."));
+						return true;
+					}
+					int queueNum = mailSys.countQueue((Player)sender);
+					int mailboxNum = mailSys.getMailBox((Player)sender).countItemInChest();
+					if(mailboxNum == 0){
+						sender.sendMessage(FormatMessage.info("You have no mail in mailbox now."));
+					}else{
+						sender.sendMessage(FormatMessage.info(String.format("You have %d mail(s) in mailbox.", mailboxNum)));
+					}
+					if(queueNum == 0){
+						sender.sendMessage(FormatMessage.info("You have no mail in queue now."));
+					}else{
+						sender.sendMessage(FormatMessage.info(String.format("You have %d mail(s) in queue, please pull them as soon.", queueNum)));
+					}
+				}else if(args[0].equalsIgnoreCase("resetmailbox")){
+					if(!(sender instanceof Player)){
+						sender.sendMessage(FormatMessage.error("Only Player can do this."));
+						return true;
+					}
+					if(mailSys.getMailBox((Player)sender) == null){
+						sender.sendMessage(FormatMessage.error("You don't have mailbox."));
+						return true;
+					}
+					mailSys.resetMailBox((Player)sender);
+					sender.sendMessage(FormatMessage.info("You have no mailbox now."));
 					return true;
 				}
 			}

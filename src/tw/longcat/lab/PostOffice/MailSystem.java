@@ -27,6 +27,8 @@ public class MailSystem {
 											Double.parseDouble(locArgs[2]),
 											Double.parseDouble(locArgs[3]));
 			try{
+				if(loc.getBlock().getType() != Material.CHEST)
+					throw new NotChestException();
 				Chest chest = (Chest)loc.getBlock().getState();
 				Chest chestNear = null;
 				if(chest.getLocation().clone().add(0, 0, 1).getBlock().getType() == Material.CHEST){
@@ -45,16 +47,21 @@ public class MailSystem {
 					MailQueue mailQueue = new MailQueue(mailQueueDB,player);
 					return mailQueue;
 				} 
+			}catch(NotChestException e){
+				mailBoxDB.clearRow(player.getName());
 			}catch(Exception e){
-				e.printStackTrace();
 			}
 		}
 		return null;
 	}
 	public boolean setMailBox(Player player,Location loc){
-			mailBoxDB.setValue(player.getName(),
-								 String.format("%s,%d,%d,%d",loc.getWorld().getName(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ()));
-			return true;
+		mailBoxDB.setValue(player.getName(),
+							 String.format("%s,%d,%d,%d",loc.getWorld().getName(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ()));
+		return true;
+	}
+	public boolean resetMailBox(Player player){
+		mailBoxDB.clearRow(player.getName());
+		return true;
 	}
 	public ItemStack pullQueue(Player player){
 		String[] data = mailQueueDB.searchInnerValue(player.getName());
@@ -62,5 +69,8 @@ public class MailSystem {
 			return null;
 		mailQueueDB.clearRow(data[0]);
 		return MailQueue.stringToItemStack(data[1].split(",")[1]);
+	}
+	public int countQueue(Player player){
+		return mailQueueDB.countInnerValue(player.getName());
 	}
 }

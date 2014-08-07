@@ -87,6 +87,15 @@ public class FileDataBase {
 		}
 		return null;
 	}
+	public int countInnerValue(String innerValue){
+		int count = 0;
+		for(Entry<String, String> entry : dbContext.entrySet()) {
+			if(entry.getValue().contains(innerValue+",")){
+				count++;
+			}
+		}
+		return count;
+	}
 	public boolean setValue(String key,String value){
 		dbContext.put(key, value);
 		write();
