@@ -4,12 +4,15 @@ Finish:
    Set mailbox.
    It should alert when setting a not-chest block into mailbox.
    There is no alert when mailbox is full.
+   Mailbox queue.
 Todo:
    Command interface not complete.
    It should need comfirm when someone reset mailbox.
-   Mailbox queue.
    Player login listener:
       - remind how many item in their mailbox.
       - alert them as mailbox is full.
    Send "u got mail" info to player when he/she is online.
    Permission setting.
+Bug:
+   Double chest may not work.
+   If full-chest and clean-queue happened at the same time, it shows full-chest first. 

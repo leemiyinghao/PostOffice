@@ -1,5 +1,6 @@
 package tw.longcat.lab.PostOffice;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,23 +12,14 @@ public class MailBox {
 		this.boxChestNear = boxChestNear;
 	}
 	public boolean mail(ItemStack items){
-		if(boxChest.getSize() == 27){
-			if(boxChestNear == null){
-				return false;
-			}else{
-				boxChestNear.addItem(items);
-			}
-		}else{
-			boxChest.addItem(items);
-		}
+		boxChest.addItem(items);
+		System.out.println("a");
 		return true;
 	}
 	public boolean canMail(){
-		if(boxChest.getSize() == 27 && boxChestNear == null){
-			return false;
-		}else if(boxChest.getSize() == 54 && boxChestNear != null){
-			return false;
+		if(boxChest.firstEmpty() != -1){
+			return true;
 		}
-		return true;
+		return false;
 	}
 }

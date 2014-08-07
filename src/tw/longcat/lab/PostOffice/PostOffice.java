@@ -16,7 +16,7 @@ public class PostOffice extends JavaPlugin{
 	MailSystem mailSys;
 	public void onEnable(){
 		this.saveDefaultConfig();
-		mailSys = new MailSystem(this,"mailBox.db");
+		mailSys = new MailSystem(this);
 	}
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if(command.getLabel().equalsIgnoreCase("po") || 
@@ -36,8 +36,8 @@ public class PostOffice extends JavaPlugin{
 					}
 					if(playerInList){
 						MailBox box = mailSys.getMailBox(getServer().getPlayer(args[1]));
-						if(box!=null){
-							if(!box.canMail())
+						if(box != null){
+							if(!(box.canMail()))
 								sender.sendMessage(FormatMessage.warning("There is no space in mailbox, place into queue."));
 							ItemStack items = ((Player)sender).getItemInHand();
 							box.mail(items);
@@ -56,6 +56,8 @@ public class PostOffice extends JavaPlugin{
 			}else if(args.length>0){
 				if(args[0].equalsIgnoreCase("reload")){
 					reload();
+					sender.sendMessage(FormatMessage.info("Reload complete."));
+					return true;
 				}else if(args[0].equalsIgnoreCase("setmailbox")){
 					if(!(sender instanceof Player))
 						sender.sendMessage(FormatMessage.error("Only Player can do this."));
@@ -66,6 +68,26 @@ public class PostOffice extends JavaPlugin{
 					}else{
 						sender.sendMessage(FormatMessage.info("The block is not a Chest"));
 					}
+					return true;
+				}else if(args[0].equalsIgnoreCase("pull")){
+					if(!(sender instanceof Player))
+						sender.sendMessage(FormatMessage.error("Only Player can do this."));
+					MailBox box = mailSys.getMailBox((Player)sender);
+					if(box!=null){
+						while(box.canMail()){
+							ItemStack items = mailSys.pullQueue((Player)sender);
+							if(items == null){
+								sender.sendMessage(FormatMessage.info("You don't have mail in queue."));
+								return true;
+							}
+							box.mail(items);
+						}
+						sender.sendMessage(FormatMessage.warning("Mailbox is full, can not pull more mail from queue."));
+						return true;
+					}else{
+						sender.sendMessage(FormatMessage.error("You don't have mailbox: " + args[1]));
+					}
+					return true;
 				}
 			}
 			sender.sendMessage(ChatColor.YELLOW + "/po send (receiver)" + ChatColor.WHITE+" : " + ChatColor.ITALIC + "Send item in hand to receiver.");

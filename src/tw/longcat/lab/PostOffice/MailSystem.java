@@ -5,16 +5,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import tw.longcat.lab.PostOffice.DataBase.FileDataBase;
 
 public class MailSystem {
 	FileDataBase mailBoxDB;
+	FileDataBase mailQueueDB;
 	Plugin po;
-	MailSystem(Plugin po,String dbFilaName){
+	MailSystem(Plugin po){
 		this.po = po;
-		mailBoxDB = new FileDataBase(po.getDataFolder() + "/" + dbFilaName);
+		mailBoxDB = new FileDataBase(po.getDataFolder() + "/" + "mailBox.db");
+		mailQueueDB = new FileDataBase(po.getDataFolder() + "/" + "mailQueue.db");
 	}
 	public MailBox getMailBox(Player player){
 		if(mailBoxDB.hasKey(player.getName())){
@@ -35,7 +38,13 @@ public class MailSystem {
 				}else if(chest.getLocation().clone().add(-1, 0, 0).getBlock().getType() == Material.CHEST){
 					chestNear = (Chest)chest.getLocation().clone().add(-1, 0, 0).getBlock().getState();
 				}
-				return new MailBox(((Chest)loc.getBlock().getState()).getBlockInventory(),chestNear!=null?chestNear.getBlockInventory():null);
+				MailBox mailBox = new MailBox(((Chest)loc.getBlock().getState()).getBlockInventory(),chestNear!=null?chestNear.getBlockInventory():null);
+				if(mailBox.canMail()){
+					return mailBox;
+				}else{
+					MailQueue mailQueue = new MailQueue(mailQueueDB,player);
+					return mailQueue;
+				} 
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -46,5 +55,12 @@ public class MailSystem {
 			mailBoxDB.setValue(player.getName(),
 								 String.format("%s,%d,%d,%d",loc.getWorld().getName(),loc.getBlockX(),loc.getBlockY(),loc.getBlockZ()));
 			return true;
+	}
+	public ItemStack pullQueue(Player player){
+		String[] data = mailQueueDB.searchInnerValue(player.getName());
+		if(data == null)
+			return null;
+		mailQueueDB.clearRow(data[0]);
+		return MailQueue.stringToItemStack(data[1].split(",")[1]);
 	}
 }

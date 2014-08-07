@@ -78,8 +78,23 @@ public class FileDataBase {
 	public String getValue(String key){
 		return dbContext.get(key);
 	}
+	public String[] searchInnerValue(String innerValue){
+		for(Entry<String, String> entry : dbContext.entrySet()) {
+			if(entry.getValue().contains(innerValue+",")){
+				String[] temp = {entry.getKey(),entry.getValue()};
+				return temp;
+			}
+		}
+		return null;
+	}
 	public boolean setValue(String key,String value){
 		dbContext.put(key, value);
+		write();
+		load();
+		return true;
+	}
+	public boolean clearRow(String key){
+		dbContext.remove(key);
 		write();
 		load();
 		return true;
