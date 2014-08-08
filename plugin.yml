@@ -1,11 +1,24 @@
 name: PostOffice
-version: 0.1
+version: 0.1-beta
 main: tw.longcat.lab.PostOffice.PostOffice
 maintainer: catLee
 authors: [catLee]
 website: http://longcat.tw
 commands:
-   po:
+   postoffice:
       description: 'Mail books or something else to another player.'
       usage: '/payhome: Pay for teleporting to home.'
-      aliases: [postoffice,mail]
+      aliases: [po,mail]
+permission:
+   postoffice.*:
+      description: Permission for a super admin who can do anything.
+      children:
+        postoffice.setmailbox: true
+        postoffice.sendmail: true
+        postoffice.reload: true
+   postoffice.setmailbox:
+      default: true
+   postoffice.sendmail:
+      default: true
+   postoffice.reload:
+      default: op

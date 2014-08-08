@@ -74,4 +74,12 @@ public class MailSystem {
 	public int countQueue(Player player){
 		return mailQueueDB.countInnerValue(player.getName());
 	}
+	public Location whereismymailbox(Player player){
+		String[] locArgs = mailBoxDB.getValue(player.getName()).split(",");
+		Location loc = new Location(po.getServer().getWorld(locArgs[0]),
+			Double.parseDouble(locArgs[1]),
+			Double.parseDouble(locArgs[2]),
+			Double.parseDouble(locArgs[3]));
+		return loc;
+	}
 }
