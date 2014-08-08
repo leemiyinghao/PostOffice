@@ -7,11 +7,11 @@ Finish:
    Mailbox queue.
    Send "u got mail" info to player when he/she is online.
    It should need comfirm when someone reset mailbox.
-Todo:
-   Command interface not complete.
    Player login listener:
       - remind how many item in their mailbox.
       - alert them as mailbox is full.
+Todo:
+   Command interface not complete.
    Permission setting.
 Bug:
    Double chest may not work.

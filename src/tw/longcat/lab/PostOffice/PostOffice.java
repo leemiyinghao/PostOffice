@@ -12,11 +12,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import tw.longcat.lab.PostOffice.Listener.PlayerLoginListener;
+
 public class PostOffice extends JavaPlugin{
 	MailSystem mailSys;
+	PlayerLoginListener playerLoginListener;
 	public void onEnable(){
 		this.saveDefaultConfig();
 		mailSys = new MailSystem(this);
+		playerLoginListener = new PlayerLoginListener(this,mailSys);
+		getServer().getPluginManager().registerEvents(playerLoginListener, this);
 	}
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if(command.getLabel().equalsIgnoreCase("po") || 

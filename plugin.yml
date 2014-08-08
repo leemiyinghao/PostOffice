@@ -1,7 +1,11 @@
 name: PostOffice
 version: 0.1
 main: tw.longcat.lab.PostOffice.PostOffice
+maintainer: catLee
+authors: [catLee]
+website: http://longcat.tw
 commands:
    po:
-      description: 'Teleport Player to there home with some cost.'
+      description: 'Mail books or something else to another player.'
       usage: '/payhome: Pay for teleporting to home.'
+      aliases: [postoffice,mail]
