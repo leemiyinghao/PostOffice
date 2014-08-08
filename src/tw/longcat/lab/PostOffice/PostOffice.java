@@ -1,11 +1,9 @@
 package tw.longcat.lab.PostOffice;
 
-import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -37,16 +35,17 @@ public class PostOffice extends JavaPlugin{
 						sender.sendMessage(FormatMessage.error("You have to put something on your hand."));
 						return true;
 					}
-					Set<OfflinePlayer> whiteListedPlayer = getServer().getWhitelistedPlayers();
-					boolean playerInList = false;
-					for(OfflinePlayer offPlayer : whiteListedPlayer){
-						if(offPlayer.getName().equalsIgnoreCase(args[1])){
-							playerInList = true;
-							break;
-						}
-					}
+//					Set<OfflinePlayer> whiteListedPlayer = getServer().getWhitelistedPlayers();
+//					boolean playerInList = false;
+//					for(OfflinePlayer offPlayer : whiteListedPlayer){
+//						if(offPlayer.getName().equalsIgnoreCase(args[1])){
+//							playerInList = true;
+//							break;
+//						}
+//					}
+					boolean playerInList = getServer().getOfflinePlayer(args[1]).hasPlayedBefore();
 					if(playerInList){
-						MailBox box = mailSys.getMailBox((Player) getServer().getOfflinePlayer(args[1]));
+						MailBox box = mailSys.getMailBox(getServer().getOfflinePlayer(args[1]));
 						if(box != null){
 							if(!(box.canMail()))
 								sender.sendMessage(FormatMessage.warning("There is no space in mailbox, place into queue."));
@@ -130,6 +129,7 @@ public class PostOffice extends JavaPlugin{
 					}else{
 						sender.sendMessage(FormatMessage.info(String.format("You have %d mail(s) in queue, please pull them as soon.", queueNum)));
 					}
+					return true;
 				}else if(args[0].equalsIgnoreCase("resetmailbox")){
 					if(!(sender instanceof Player)){
 						sender.sendMessage(FormatMessage.error("Only Player can do this."));

@@ -3,6 +3,7 @@ package tw.longcat.lab.PostOffice;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -19,9 +20,9 @@ public class MailSystem {
 		mailBoxDB = new FileDataBase(po.getDataFolder() + "/" + "mailBox.db");
 		mailQueueDB = new FileDataBase(po.getDataFolder() + "/" + "mailQueue.db");
 	}
-	public MailBox getMailBox(Player player){
-		if(mailBoxDB.hasKey(player.getName())){
-			String[] locArgs = mailBoxDB.getValue(player.getName()).split(",");
+	public MailBox getMailBox(OfflinePlayer offlinePlayer){
+		if(mailBoxDB.hasKey(offlinePlayer.getName())){
+			String[] locArgs = mailBoxDB.getValue(offlinePlayer.getName()).split(",");
 			Location loc = new Location(po.getServer().getWorld(locArgs[0]),
 											Double.parseDouble(locArgs[1]),
 											Double.parseDouble(locArgs[2]),
@@ -44,11 +45,11 @@ public class MailSystem {
 				if(mailBox.canMail()){
 					return mailBox;
 				}else{
-					MailQueue mailQueue = new MailQueue(mailQueueDB,player);
+					MailQueue mailQueue = new MailQueue(mailQueueDB,offlinePlayer);
 					return mailQueue;
 				} 
 			}catch(NotChestException e){
-				mailBoxDB.clearRow(player.getName());
+				mailBoxDB.clearRow(offlinePlayer.getName());
 			}catch(Exception e){
 			}
 		}

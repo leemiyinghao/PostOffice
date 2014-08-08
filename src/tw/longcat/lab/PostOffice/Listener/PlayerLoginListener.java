@@ -3,7 +3,7 @@ package tw.longcat.lab.PostOffice.Listener;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 
 import tw.longcat.lab.PostOffice.FormatMessage;
@@ -18,10 +18,9 @@ public class PlayerLoginListener implements Listener{
 		this.mailSys = mailSys;
 	}
 	@EventHandler
-	public boolean onPlayerLogin(PlayerLoginEvent e){
+	public boolean onPlayerJoin(PlayerJoinEvent e){
 		Player player = e.getPlayer();
 		MailBox mailbox = mailSys.getMailBox(player);
-		System.out.println("Player Logged.");
 		if(mailbox != null){
 			if(mailbox.canMail())
 				player.sendMessage(FormatMessage.info(String.format("You have %d mail(s) in your mailbox.",mailbox.countItemInChest())));

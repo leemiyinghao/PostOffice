@@ -9,8 +9,8 @@ import java.math.BigInteger;
 import net.minecraft.server.v1_4_6.NBTBase;
 import net.minecraft.server.v1_4_6.NBTTagCompound;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_4_6.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import tw.longcat.lab.PostOffice.DataBase.FileDataBase;
@@ -18,16 +18,16 @@ import tw.longcat.lab.PostOffice.DataBase.FileDataBase;
 
 public class MailQueue extends MailBox{
 	FileDataBase mailQueueDB;
-	Player player;
-	MailQueue(FileDataBase mailQueueDB,Player player) {
+	OfflinePlayer offlinePlayer;
+	MailQueue(FileDataBase mailQueueDB,OfflinePlayer offlinePlayer) {
 		super(null, null);
 		this.mailQueueDB = mailQueueDB;
-		this.player = player;
+		this.offlinePlayer = offlinePlayer;
 	}
 	public boolean mail(ItemStack items){
 		int key;
 		for(key = 0;mailQueueDB.hasKey(String.valueOf(key));key++);
-		mailQueueDB.setValue(String.valueOf(key), player.getName() + "," + itemstackToString(items));
+		mailQueueDB.setValue(String.valueOf(key), offlinePlayer.getName() + "," + itemstackToString(items));
 		System.out.println("Queue");
 		return true;
 	}

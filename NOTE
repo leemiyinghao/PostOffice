@@ -11,7 +11,7 @@ Finish:
       - remind how many item in their mailbox.
       - alert them as mailbox is full.
 Todo:
-   Command interface not complete.
+   Command interface final check.
    Permission setting.
 Bug:
    Double chest may not work.

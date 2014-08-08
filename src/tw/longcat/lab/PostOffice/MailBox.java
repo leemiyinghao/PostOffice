@@ -31,12 +31,12 @@ public class MailBox {
 	public int countItemInChest(){
 		int count = 0;
 		for(ItemStack items : boxChest.getContents()){
-			if(items.getAmount() > 0)
+			if(items != null)
 				count++;
 		}
 		if(boxChestNear != null){
 			for(ItemStack items : boxChestNear.getContents()){
-				if(items.getAmount() > 0)
+				if(items != null)
 					count++;
 			}
 		}
