@@ -9,7 +9,7 @@ Feature
 - All the Mails and Packages will be sent into the Mailbox when there is enough space in the Chest.
 - When the Chest is full, rest of the Mails and Packages will be placed in Post Office(Queue), and player will get message reminding them to clear their mailbox.
 
-Working on Progress
+Working in Progress
 -------------
 - Mail can be send from WebUI.
 
